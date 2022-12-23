@@ -30,3 +30,6 @@
 *.exe
 *.out
 *.app
+/.vs/chat-project/v17
+/chat-project/chat-project.vcxproj.filters
+/chat-project/chat-project.vcxproj.user
