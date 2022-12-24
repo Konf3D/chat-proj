@@ -33,3 +33,5 @@
 /.vs/chat-project/v17
 /chat-project/chat-project.vcxproj.filters
 /chat-project/chat-project.vcxproj.user
+/chat-project/x64/Debug
+/x64/Debug
