@@ -1,4 +1,5 @@
 #include "message.h"
+#include "gui.h"
 template<typename T>
 inline Message::Message(const T& content, const T& sender)
 	:m_content(content),m_sender(sender)

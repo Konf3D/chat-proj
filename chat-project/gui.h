@@ -23,7 +23,7 @@ public:
 	template <typename T>
 	static User& findUser(const T& username);
 private:
-	//static std::vector<std::shared_ptr<Message>> m_messages;
-	//static std::vector< std::shared_ptr<PrivateMessage&>> m_privatemessages;
-	//static std::vector< std::shared_ptr<User&>> m_users;
+	static std::vector < std::shared_ptr<Message>         > m_messages;
+	static std::vector < std::shared_ptr<PrivateMessage&> > m_privatemessages;
+	static std::vector < std::shared_ptr<User&>           > m_users;
 };

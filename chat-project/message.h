@@ -1,6 +1,5 @@
 #pragma once
 #include <string>
-#include "gui.h"
 class Message
 {
 public:
