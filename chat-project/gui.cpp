@@ -1,12 +1,14 @@
 #include "gui.h"
-
+#include <iostream>
 
 void DB::sendMessage(const std::string& content, const std::string& reciever)
 {
+
 }
 
-void DB::sendMessage(const std::string& reciever)
+void DB::sendMessage(const std::string& content)
 {
+
 }
 
 std::shared_ptr<User> DB::findUser(std::string_view username) const
@@ -14,7 +16,7 @@ std::shared_ptr<User> DB::findUser(std::string_view username) const
 	std::shared_ptr<User> val = nullptr;
 	for (auto& element : this->m_users)
 	{
-		if (username == *element)
+		if (username == element->getUsername())
 			val = element;
 	}
 	return val;
@@ -25,7 +27,7 @@ std::shared_ptr<User> DB::findAccount(std::string_view login) const
 	std::shared_ptr<User> val = nullptr;
 	for (auto& element : this->m_users)
 	{
-		if (login == static_cast<Account>(*element))
+		if (login == element->getLogin())
 			val = element;
 	}
 	return val;
@@ -58,11 +60,17 @@ bool DB::signUp(const T& login, const T& password, const T& username)
 
 void DB::displayMessages() const
 {
-	return;
+	for (auto& element : m_messages)
+	{
+		std::cout << element->getMessage();
+	}
 }
 
 template<typename T>
 void DB::displayMessages(const T& password) const
 {
-	return;
+	for (auto& element : m_privatemessages)
+	{
+		std::cout << element->getMessage(password);
+	}
 }

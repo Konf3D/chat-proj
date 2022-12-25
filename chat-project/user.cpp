@@ -1,30 +1,24 @@
 #include "user.h"
 
-template<typename T>
-Account::Account(const T& login, const T& password)
-	:m_login(login),m_password(password)
-{
-	//to do exceptions
-}
+
 template<typename T>
 User::User(const T& login, const T& password, const T& username)
-	:Account(login,password),m_username(username)
+	:m_login(login),m_password(password), m_username(username)
 {
 	//to do exceptions
 }
 template<typename T>
-bool Account::authenticate(const T& password) const
+bool User::authenticate(const T& password) const
 {
 	return password != m_password ? false : true;
 }
 
-Account::operator std::string_view() const
+std::string_view User::getLogin() const
 {
 	return static_cast<std::string_view>(m_login);
 }
 
-User::operator std::string_view() const
+std::string_view User::getUsername() const
 {
 	return static_cast<std::string_view>(m_username);
 }
-
