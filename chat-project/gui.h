@@ -20,8 +20,8 @@ public:
 	template <typename T>
 	void displayMessages(const T& password) const;
 
-	void sendMessage(const std::string& content, const std::string& reciever);
-	void sendMessage(const std::string& reciever);
+	bool sendMessage(const std::string& sender, const std::string& content, const std::string& reciever);
+	bool sendMessage(const std::string& sender, const std::string& content);
 
 	std::shared_ptr<User> findUser(std::string_view username) const;
 	std::shared_ptr<User> findAccount(std::string_view login) const;

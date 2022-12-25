@@ -1,16 +1,23 @@
 #include "gui.h"
 #include <iostream>
 
-void DB::sendMessage(const std::string& content, const std::string& reciever)
+//false if sender or reciever is invalid
+bool DB::sendMessage(const std::string& sender, const std::string& content, const std::string& reciever)
 {
-
+	if ( !(this->findUser(sender) && this->findUser(reciever)))
+		return false;
+	m_privatemessages.emplace_back( content,sender,reciever );
+	return true;
 }
-
-void DB::sendMessage(const std::string& content)
+// false if sender is invalid
+bool DB::sendMessage(const std::string& sender, const std::string& content)
 {
-
+	if (!(this->findUser(sender) ))
+		return false;
+	m_messages.emplace_back(content, sender);
+	return true;
 }
-
+// search user by his username
 std::shared_ptr<User> DB::findUser(std::string_view username) const
 {
 	std::shared_ptr<User> val = nullptr;
@@ -21,7 +28,7 @@ std::shared_ptr<User> DB::findUser(std::string_view username) const
 	}
 	return val;
 }
-
+//search user by his login
 std::shared_ptr<User> DB::findAccount(std::string_view login) const
 {
 	std::shared_ptr<User> val = nullptr;
@@ -32,7 +39,7 @@ std::shared_ptr<User> DB::findAccount(std::string_view login) const
 	}
 	return val;
 }
-
+// login as user from the database, return nullptr if user/password isn't valid
 template<typename T>
 std::shared_ptr<User> DB::signIn(const T& login, const T& password) const
 {
@@ -46,18 +53,18 @@ std::shared_ptr<User> DB::signIn(const T& login, const T& password) const
 
 	return user;
 }
-
+// add new user to database, return nullptr if user with a specified login already exists or username is taken
 template<typename T>
 bool DB::signUp(const T& login, const T& password, const T& username)
 {
-	auto user = findAccount(login);
-	
-	if (user)
+	auto _login = findAccount(login);
+	auto _username = findUser(username);
+	if (_user || _username)
 		return false;
-	m_users.emplace_back({ login, password, username });
+	m_users.emplace_back( login, password, username );
 	return true;
 }
-
+//display public messages
 void DB::displayMessages() const
 {
 	for (auto& element : m_messages)
@@ -65,7 +72,7 @@ void DB::displayMessages() const
 		std::cout << element->getMessage();
 	}
 }
-
+// display private messages
 template<typename T>
 void DB::displayMessages(const T& password) const
 {

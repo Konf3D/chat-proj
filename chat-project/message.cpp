@@ -30,5 +30,5 @@ std::string_view PrivateMessage::getMessage(const T & password) const
 	if (GUI::findUser(getSender()).authenticate(password) || GUI::findUser(m_reciever).authenticate(password))
 		return getMessage();
 	
-	return "Access denied";
+	return "Access denied, this message is private!";
 }
