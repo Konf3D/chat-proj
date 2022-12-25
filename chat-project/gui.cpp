@@ -1,15 +1,15 @@
 #include "gui.h"
 
 
-void GUI::sendMessage(const std::string& content, const std::string& reciever)
+void DB::sendMessage(const std::string& content, const std::string& reciever)
 {
 }
 
-void GUI::sendMessage(const std::string& reciever)
+void DB::sendMessage(const std::string& reciever)
 {
 }
 
-std::shared_ptr<User> GUI::findUser(std::string_view username) const
+std::shared_ptr<User> DB::findUser(std::string_view username) const
 {
 	std::shared_ptr<User> val = nullptr;
 	for (auto& element : this->m_users)
@@ -20,7 +20,7 @@ std::shared_ptr<User> GUI::findUser(std::string_view username) const
 	return val;
 }
 
-std::shared_ptr<User> GUI::findAccount(std::string_view login) const
+std::shared_ptr<User> DB::findAccount(std::string_view login) const
 {
 	std::shared_ptr<User> val = nullptr;
 	for (auto& element : this->m_users)
@@ -32,7 +32,7 @@ std::shared_ptr<User> GUI::findAccount(std::string_view login) const
 }
 
 template<typename T>
-std::shared_ptr<User> GUI::signIn(const T& login, const T& password) const
+std::shared_ptr<User> DB::signIn(const T& login, const T& password) const
 {
 	auto user = findAccount(login);
 
@@ -46,7 +46,7 @@ std::shared_ptr<User> GUI::signIn(const T& login, const T& password) const
 }
 
 template<typename T>
-bool GUI::signUp(const T& login, const T& password, const T& username)
+bool DB::signUp(const T& login, const T& password, const T& username)
 {
 	auto user = findAccount(login);
 	
@@ -56,13 +56,13 @@ bool GUI::signUp(const T& login, const T& password, const T& username)
 	return true;
 }
 
-void GUI::displayMessages() const
+void DB::displayMessages() const
 {
 	return;
 }
 
 template<typename T>
-void GUI::displayMessages(const T& password) const
+void DB::displayMessages(const T& password) const
 {
 	return;
 }

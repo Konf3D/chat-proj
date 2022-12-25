@@ -1,14 +1,14 @@
 #pragma once
-#include <vector>
-#include <memory>
-#include "user.h"
-#include "message.h"
-#include <variant>
-class GUI
+#include <vector> //for users and messages database
+#include <memory> // for database element transfering
+#include "user.h" // User and Account classes
+#include "message.h" // Public message (Message) and PrivateMessage classes
+
+class DB
 {
 public:
-	GUI() = default;
-	~GUI() = default;
+	DB() = default;
+	~DB() = default;
 public:
 	template <typename T>
 	std::shared_ptr<User> signIn(const T& login, const T& password) const;
@@ -26,7 +26,12 @@ public:
 	std::shared_ptr<User> findUser(std::string_view username) const;
 	std::shared_ptr<User> findAccount(std::string_view login) const;
 private:
-	std::vector <std::shared_ptr<Message>>			m_messages;
-	std::vector <std::shared_ptr<PrivateMessage>>	m_privatemessages;
-	std::vector <std::shared_ptr<User>>				m_users;
+	std::vector <	std::shared_ptr<Message>			>			m_messages;
+	std::vector <	std::shared_ptr<PrivateMessage>		>			m_privatemessages;
+	std::vector <	std::shared_ptr<User>				>			m_users;
+};
+
+class GUI : private DB
+{
+
 };

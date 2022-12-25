@@ -15,8 +15,10 @@ private:
 	std::string m_login;
 	std::string m_password;
 };
+// inheritance should be the other way around
+// or just removed as it is just a string for now
 
-class User : public Account
+class User : private Account
 {
 public:
 	User() = delete;
