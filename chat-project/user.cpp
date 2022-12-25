@@ -18,7 +18,13 @@ bool Account::authenticate(const T& password) const
 	return password != m_password ? false : true;
 }
 
+Account::operator std::string_view() const
+{
+	return static_cast<std::string_view>(m_login);
+}
+
 User::operator std::string_view() const
 {
 	return static_cast<std::string_view>(m_username);
 }
+

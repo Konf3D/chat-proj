@@ -3,27 +3,30 @@
 #include <memory>
 #include "user.h"
 #include "message.h"
-
+#include <variant>
 class GUI
 {
 public:
-	GUI();
+	GUI() = default;
 	~GUI() = default;
 public:
-	void signIn();
-	void signUp();
+	template <typename T>
+	std::shared_ptr<User> signIn(const T& login, const T& password) const;
+	template <typename T>
+	bool signUp(const T& login, const T& password,const T& username);
 
 	void displayMessages() const;
 
 	template <typename T>
 	void displayMessages(const T& password) const;
 
-	void sendMessage();
+	void sendMessage(const std::string& content, const std::string& reciever);
+	void sendMessage(const std::string& reciever);
 
-	template <typename T>
-	static User& findUser(const T& username);
+	std::shared_ptr<User> findUser(std::string_view username) const;
+	std::shared_ptr<User> findAccount(std::string_view login) const;
 private:
-	static std::vector < std::shared_ptr<Message>         > m_messages;
-	static std::vector < std::shared_ptr<PrivateMessage&> > m_privatemessages;
-	static std::vector < std::shared_ptr<User&>           > m_users;
+	std::vector <std::shared_ptr<Message>>			m_messages;
+	std::vector <std::shared_ptr<PrivateMessage>>	m_privatemessages;
+	std::vector <std::shared_ptr<User>>				m_users;
 };

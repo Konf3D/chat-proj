@@ -10,6 +10,7 @@ public:
 public:
 	template<typename T>
 	bool authenticate(const T& password) const;
+	virtual operator std::string_view() const;
 private:
 	std::string m_login;
 	std::string m_password;
@@ -23,7 +24,7 @@ public:
 	User(const T& login, const T& password, const T& username);
 	~User() = default;
 public:
-	operator std::string_view() const;
+	virtual operator std::string_view() const;
 private:
 	std::string m_username;
 };
