@@ -1,34 +1,31 @@
+
 #include "message.h"
-#include "gui.h"
-template<typename T>
-inline Message::Message(const T& content, const T& sender)
+
+inline Message::Message(const std::string& content, const std::string& sender)
 	:m_content(content),m_sender(sender)
 {
-	//to do exception
 }
 
-std::string_view Message::getMessage() const
+std::string Message::getMessage() const
 {
 	return m_content;
 }
 
-std::string_view Message::getSender() const
+std::string Message::getSender() const
 {
 	return m_sender;
 }
 
-template<typename T>
-PrivateMessage::PrivateMessage(const T& content, const T& sender, const T& reciever)
+PrivateMessage::PrivateMessage(const std::string& content, const std::string& sender, const std::string& reciever)
 	:Message(content,sender),m_reciever(reciever)
 {
-	// to do exception
 }
 
-template<typename T>
-std::string_view PrivateMessage::getMessage(const T & password) const
+std::string PrivateMessage::getMessage(const DB& db,const std::string& password) const
 {
-	if (GUI::findUser(getSender()).authenticate(password) || GUI::findUser(m_reciever).authenticate(password))
-		return getMessage();
+
+	if (db.findUser(getSender()).authenticate(password) || db.findUser(m_reciever).authenticate(password))
+		return Message::getMessage();
 	
 	return "Access denied, this message is private!";
 }

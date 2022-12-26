@@ -1,15 +1,15 @@
 #pragma once
 #include <string>
+#include "db.h"
 class Message
 {
 public:
 	Message() = delete;
-	template <typename T>
-	Message(const T& content, const T& sender);
+	Message(const std::string& content, const std::string& sender);
 	~Message() = default;
 public:
-	std::string_view getMessage() const;
-	std::string_view getSender() const;
+	std::string getMessage() const;
+	std::string getSender() const;
 private:
 	std::string m_content;
 	std::string m_sender;
@@ -19,12 +19,10 @@ class PrivateMessage : private Message
 {
 public:
 	PrivateMessage() = delete;
-	template <typename T>
-	PrivateMessage(const T& content, const T& sender,const T& reciever);
+	PrivateMessage(const std::string& content, const std::string& sender,const std::string& reciever);
 	~PrivateMessage() = default;
 public:
-	template<typename T>
-	std::string_view getMessage(const T& password) const;
+	std::string getMessage( const DB& db,const std::string& password) const;
 private:
 	std::string m_reciever;
 };

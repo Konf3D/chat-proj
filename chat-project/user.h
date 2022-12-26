@@ -3,17 +3,18 @@
 class User
 {
 public:
-	User() = delete;
+	User();
 	template<typename T>
 	User(const T& login, const T& username, const T& password);
 	~User() = default;
 public:
-	template<typename T>
-	bool authenticate(const T& password) const;
-	std::string_view getLogin() const;
-	std::string_view getUsername() const;
+	bool authenticate(const std::string& password) const;
+	std::string getLogin() const;
+	std::string getUsername() const;
+	operator bool() const;
+	User& operator =(const User& rhs);
 private:
-	const std::string m_login;
-	const std::string m_username;
+	std::string m_login;
+	std::string m_username;
 	std::string m_password;
 };
