@@ -35,3 +35,5 @@
 /chat-project/chat-project.vcxproj.user
 /chat-project/x64/Debug
 /x64/Debug
+/check-cppcheck-build-dir
+/check.cppcheck
