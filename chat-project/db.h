@@ -12,10 +12,8 @@ public:
 	DB() = default;
 	~DB() = default;
 public:
-	template <typename T>
-	std::shared_ptr<User> signIn(const T& login, const T& password) const;
-	template <typename T>
-	bool signUp(const T& login, const T& password, const T& username);
+	User signIn(const std::string& login, const std::string& password) const;
+	bool signUp(const std::string& login, const std::string& password, const std::string& username);
 
 	void getMessages() const;
 

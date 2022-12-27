@@ -8,7 +8,7 @@ public:
 	Message(const std::string& content, const std::string& sender);
 	~Message() = default;
 public:
-	std::string getMessage() const;
+	void displayMessage() const;
 	std::string getSender() const;
 private:
 	std::string m_content;
@@ -22,7 +22,7 @@ public:
 	PrivateMessage(const std::string& content, const std::string& sender,const std::string& reciever);
 	~PrivateMessage() = default;
 public:
-	std::string getMessage( const DB& db,const std::string& password) const;
+	void displayMessage( const DB& db,const std::string& password) const;
 private:
 	std::string m_reciever;
 };

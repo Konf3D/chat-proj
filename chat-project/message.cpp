@@ -1,4 +1,4 @@
-
+#include <iostream>
 #include "message.h"
 
 inline Message::Message(const std::string& content, const std::string& sender)
@@ -6,9 +6,9 @@ inline Message::Message(const std::string& content, const std::string& sender)
 {
 }
 
-std::string Message::getMessage() const
+void Message::displayMessage() const
 {
-	return m_content;
+	std::cout << m_sender << " wrote: \"" << m_content << "\"";
 }
 
 std::string Message::getSender() const
@@ -21,11 +21,11 @@ PrivateMessage::PrivateMessage(const std::string& content, const std::string& se
 {
 }
 
-std::string PrivateMessage::getMessage(const DB& db,const std::string& password) const
+void PrivateMessage::displayMessage(const DB& db,const std::string& password) const
 {
-
 	if (db.findUser(getSender()).authenticate(password) || db.findUser(m_reciever).authenticate(password))
-		return Message::getMessage();
-	
-	return "Access denied, this message is private!";
+	{
+		Message::displayMessage();
+		std::cout << " to " << m_reciever;
+	}
 }

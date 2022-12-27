@@ -74,8 +74,12 @@ void GUI::trySignUp()
 			return;
 		}
 		m_password = password;
-		m_currentUser = ptr;
-		DB::signUp(login, password, username);
+		if (!DB::signUp(login, password, username))
+		{
+			std::cout << "Signup failed!\n";
+			return;
+		}
+		m_currentUser = findUser(username);
 		logged();
 	}
 	return;
@@ -83,7 +87,7 @@ void GUI::trySignUp()
 
 void GUI::logged()
 {
-	char choice;
+	static char choice;
 	static std::string message;
 	std::cout << "What to do:\n1.Write a message to everyone\n2.Write a message to a user\n3.Display public messages\n4.Display private messages\n5.Logout\n";
 	std::cin >> choice;
@@ -92,39 +96,45 @@ void GUI::logged()
 	case '1':
 	{
 		std::cout << "Enter your message:";
-		std::cin >> message;
-		if (sendMessage(m_currentUser.getUsername(), message))
+		//std::cin >> message;
+		std::getline(std::cin, message);
+		if (sendMessage(m_currentUser.getUsername(), message) == false)
 		{
-			"Message sent successfully!\n";
+			std::cout << "Message was not sent for unknown reason! Try again!\n";
 		}
-		std::cout << "Message was not sent for unknown reason! Try again!\n";
-		logged();
+		std::cout << "Message sent successfully!\n";
+		break;
 	}
 	case '2':
 	{
 		std::cout << "Enter your message:";
-		std::cin >> message;
+		//std::cin >> message;
+		std::getline(std::cin, message);
 		std::cout << "Enter the reciever's username:";
 		std::string reciever;
-		if (findUser(reciever))
+		//std::cin >> reciever;
+		std::getline(std::cin, reciever);
+		if (!findUser(reciever))
 		{
 			std::cout << "User(reciever) not found! Try again.\n";
-			logged();
+			break;
 		}
-		if (sendMessage(m_currentUser.getUsername(), message, reciever))
+		if (!sendMessage(m_currentUser.getUsername(), message, reciever))
 		{
-			std::cout << "Message sent successfully!";
-			logged();
+			std::cout << "Message was not sent for unknown reason! Try again!\n";
+			break;
 		}
-		std::cout << "Message was not sent for unknown reason! Try again!\n";
-		logged();
+		std::cout << "Message sent successfully!";
+		break;
 	}
 	case '3':
 		getMessages();
+		break;
 	case '4':
 		getMessages(m_password);
+		break;
 	case '5':
-		visit();
+		return;
 	default:
 		break;
 	}

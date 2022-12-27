@@ -1,8 +1,7 @@
 #include "user.h"
 
 
-template<typename T>
-User::User(const T& login, const T& password, const T& username)
+User::User(const std::string& login, const std::string& password, const std::string& username)
 	:m_login(login),m_password(password), m_username(username)
 {
 

@@ -4,8 +4,7 @@ class User
 {
 public:
 	User();
-	template<typename T>
-	User(const T& login, const T& username, const T& password);
+	User(const std::string& login, const std::string& username, const std::string& password);
 	~User() = default;
 public:
 	bool authenticate(const std::string& password) const;

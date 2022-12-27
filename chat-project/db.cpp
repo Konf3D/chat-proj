@@ -6,8 +6,7 @@ bool DB::sendMessage(const std::string& sender, const std::string& content, cons
 	if (!(findUser(sender) && findUser(reciever)))
 		return false;
 
-	PrivateMessage msg(content, sender,reciever);
-	m_privatemessages.push_back( msg);
+	m_privatemessages.emplace_back(PrivateMessage(content, sender, reciever));
 	return true;
 }
 // false if sender is invalid
@@ -15,8 +14,8 @@ bool DB::sendMessage(const std::string& sender, const std::string& content)
 {
 	if (!(findUser(sender)))
 		return false;
-	Message msg(content, sender);
-	m_messages.push_back(msg);
+
+	m_messages.emplace_back(Message(content, sender));
 	return true;
 }
 // search user by his username
@@ -39,29 +38,28 @@ User DB::findAccount(const std::string& login) const
 	}
 	return User();
 }
-// login as user from the database, return nullptr if user/password isn't valid
-template<typename T>
-std::shared_ptr<User> DB::signIn(const T& login, const T& password) const
+// login as user from the database, return empty if user/password isn't valid
+User DB::signIn(const std::string& login, const std::string& password) const
 {
 	auto user = findAccount(login);
 
 	if (!user)
-		return nullptr;
+		return User();
 
 	if (!(user.authenticate(password)))
-		return nullptr;
+		return User();
 
 	return user;
 }
-// add new user to database, return nullptr if user with a specified login already exists or username is taken
-template<typename T>
-bool DB::signUp(const T& login, const T& password, const T& username)
+// add new user to database, return false if user with a specified login already exists or username is taken
+bool DB::signUp(const std::string& login, const std::string& password, const std::string& username)
 {
 	auto _login = findAccount(login);
 	auto _username = findUser(username);
 	if (_login || _username)
-		return false;
-	m_users.emplace_back(User(login, password, username));
+		return User();
+	User newUser(login, username, password);
+	m_users.emplace_back(newUser);
 	return true;
 }
 //display public messages
@@ -69,7 +67,8 @@ void DB::getMessages() const
 {
 	for (auto& element : m_messages)
 	{
-		std::cout << element.getMessage();
+		element.displayMessage();
+		std::cout << '\n';
 	}
 }
 // display private messages
@@ -77,6 +76,7 @@ void DB::getMessages(const std::string& password) const
 {
 	for (auto& element : m_privatemessages)
 	{
-		std::cout << element.getMessage(static_cast<DB>(*this),password);
+		element.displayMessage(static_cast<DB>(*this),password);
+		std::cout << '\n';
 	}
 }
