@@ -33,12 +33,17 @@ void GUI::visit()
 void GUI::trySignIn()
 {
 	std::cout << "Please, enter your credentials (login,password)\n";
+	std::cout << "login: ";
 	std::string login;
+	std::getline(std::cin, login);
+	std::getline(std::cin, login);// because first time call gets empty string autimatically
+	std::cout << "password: ";
 	std::string password;
-	std::cin >> login >> password;
+	std::getline(std::cin, password);
+	//std::cin >> login >> password;
 	{
-		auto ptr = findAccount(login);
-		if (ptr  && ptr.authenticate(password))
+		auto ptr = signIn(login,password);
+		if (ptr)
 		{
 			m_currentUser = ptr;
 			std::cout << "Login successful!\n";
@@ -48,7 +53,6 @@ void GUI::trySignIn()
 		else
 		{
 			std::cout << "Login/password is incorrect! Try again.\n";
-
 		}
 	}
 	return;
@@ -58,9 +62,15 @@ void GUI::trySignUp()
 {
 	std::cout << "Please, enter your credentials (login,password,username)\n";
 	std::string login;
+	std::cout << "login: ";
+	std::getline(std::cin, login);
+	std::getline(std::cin, login);// because first time call gets empty string autimatically
 	std::string password;
+	std::cout << "password: ";
+	std::getline(std::cin, password);
 	std::string username;
-	std::cin >> login >> password >> username;
+	std::cout << "username: ";
+	std::getline(std::cin, username);
 	{
 		auto ptr = findAccount(login);
 		if (ptr)
@@ -96,8 +106,8 @@ void GUI::logged()
 	case '1':
 	{
 		std::cout << "Enter your message:";
-		//std::cin >> message;
 		std::getline(std::cin, message);
+		std::getline(std::cin, message);// because first time call gets empty string autimatically
 		if (sendMessage(m_currentUser.getUsername(), message) == false)
 		{
 			std::cout << "Message was not sent for unknown reason! Try again!\n";
@@ -108,11 +118,10 @@ void GUI::logged()
 	case '2':
 	{
 		std::cout << "Enter your message:";
-		//std::cin >> message;
+		std::cin >> message;
 		std::getline(std::cin, message);
 		std::cout << "Enter the reciever's username:";
 		std::string reciever;
-		//std::cin >> reciever;
 		std::getline(std::cin, reciever);
 		if (!findUser(reciever))
 		{
@@ -124,7 +133,7 @@ void GUI::logged()
 			std::cout << "Message was not sent for unknown reason! Try again!\n";
 			break;
 		}
-		std::cout << "Message sent successfully!";
+		std::cout << "Message sent successfully!\n";
 		break;
 	}
 	case '3':

@@ -21,7 +21,9 @@ bool DB::sendMessage(const std::string& sender, const std::string& content)
 // search user by his username
 User DB::findUser(const std::string& username) const
 {
-	for (auto& element : m_users)
+	//std::find_if(m_users.begin(),m_users.end(),std::equal(username.begin(),username.end(),? )
+	//what if not found?
+	for (const auto& element : m_users)
 	{
 		if (username == element.getUsername())
 			return element;
@@ -31,7 +33,7 @@ User DB::findUser(const std::string& username) const
 //search user by his login
 User DB::findAccount(const std::string& login) const
 {
-	for (auto& element : m_users)
+	for (const auto& element : m_users)
 	{
 		if (login == element.getLogin())
 			return element;
@@ -58,14 +60,14 @@ bool DB::signUp(const std::string& login, const std::string& password, const std
 	auto _username = findUser(username);
 	if (_login || _username)
 		return User();
-	User newUser(login, username, password);
+	User newUser(login, password,username);
 	m_users.emplace_back(newUser);
 	return true;
 }
 //display public messages
 void DB::getMessages() const
 {
-	for (auto& element : m_messages)
+	for (const auto& element : m_messages)
 	{
 		element.displayMessage();
 		std::cout << '\n';

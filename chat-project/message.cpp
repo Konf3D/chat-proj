@@ -8,7 +8,7 @@ inline Message::Message(const std::string& content, const std::string& sender)
 
 void Message::displayMessage() const
 {
-	std::cout << m_sender << " wrote: \"" << m_content << "\"";
+	std::cout << m_sender << " sent: \"" << m_content << "\"";
 }
 
 std::string Message::getSender() const

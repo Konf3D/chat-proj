@@ -4,7 +4,7 @@ class User
 {
 public:
 	User();
-	User(const std::string& login, const std::string& username, const std::string& password);
+	User(const std::string& login, const std::string& password, const std::string& username);
 	~User() = default;
 public:
 	bool authenticate(const std::string& password) const;
@@ -14,6 +14,6 @@ public:
 	User& operator =(const User& rhs);
 private:
 	std::string m_login;
-	std::string m_username;
 	std::string m_password;
+	std::string m_username;
 };
