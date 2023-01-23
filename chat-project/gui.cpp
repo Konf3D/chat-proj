@@ -1,3 +1,6 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: https://pvs-studio.com
 #include <iostream>
 #include "gui.h"
 #include "user.h"
@@ -43,6 +46,7 @@ void GUI::trySignIn()
 	//std::cin >> login >> password;
 	{
 		auto ptr = signIn(login,password);
+
 		if (ptr)
 		{
 			m_currentUser = ptr;
@@ -118,12 +122,13 @@ void GUI::logged()
 	case '2':
 	{
 		std::cout << "Enter your message:";
-		std::cin >> message;
 		std::getline(std::cin, message);
+		std::getline(std::cin, message);// because first time call gets empty string autimatically
 		std::cout << "Enter the reciever's username:";
 		std::string reciever;
 		std::getline(std::cin, reciever);
-		if (!findUser(reciever))
+		auto recieverUser = findUser(reciever);
+		if (!recieverUser)
 		{
 			std::cout << "User(reciever) not found! Try again.\n";
 			break;

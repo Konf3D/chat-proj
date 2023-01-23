@@ -37,3 +37,6 @@
 /x64/Debug
 /check-cppcheck-build-dir
 /check.cppcheck
+/.vs/chat-proj/v17
+/.vs/chat-project/FileContentIndex
+/.vs

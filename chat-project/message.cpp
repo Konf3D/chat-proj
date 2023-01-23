@@ -1,7 +1,10 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: https://pvs-studio.com
 #include <iostream>
 #include "message.h"
 
-inline Message::Message(const std::string& content, const std::string& sender)
+Message::Message(const std::string& content, const std::string& sender)
 	:m_content(content),m_sender(sender)
 {
 }

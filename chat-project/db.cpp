@@ -1,3 +1,6 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: https://pvs-studio.com
 #include <iostream>
 #include "db.h"
 #include "message.h"
@@ -60,8 +63,7 @@ bool DB::signUp(const std::string& login, const std::string& password, const std
 	auto _username = findUser(username);
 	if (_login || _username)
 		return User();
-	User newUser(login, password,username);
-	m_users.emplace_back(newUser);
+	m_users.emplace_back(User(login,password,username));
 	return true;
 }
 //display public messages
@@ -76,9 +78,9 @@ void DB::getMessages() const
 // display private messages
 void DB::getMessages(const std::string& password) const
 {
-	for (auto& element : m_privatemessages)
+	for (const auto& element : m_privatemessages)
 	{
-		element.displayMessage(static_cast<DB>(*this),password);
+		element.displayMessage(*this,password);
 		std::cout << '\n';
 	}
 }

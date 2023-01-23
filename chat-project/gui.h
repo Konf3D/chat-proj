@@ -1,3 +1,6 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: https://pvs-studio.com
 #pragma once
 #include <vector> //for users and messages database
 #include <memory> // for database element transfering
@@ -18,5 +21,5 @@ private:
 	void logged();
 
 	User m_currentUser;
-	std::string m_password; // user class does not have password getter due to security
+	std::string m_password; // user class does not have password getter for security
 };
