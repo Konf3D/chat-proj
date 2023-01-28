@@ -2,85 +2,86 @@
 
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: https://pvs-studio.com
 #include <iostream>
+#include <algorithm>
+#include <ranges>
+#include <functional>
 #include "db.h"
+#include "user.h"
 #include "message.h"
-bool DB::sendMessage(const std::string& sender, const std::string& content, const std::string& reciever)
+
+bool impl::DBUser::isUsernameExists(const std::string& username) const
 {
-	if (!(findUser(sender) && findUser(reciever)))
+	auto isUsernameEqual = [&username](const User& user) {
+		return user.getUsername() == username; 
+	};
+	return std::ranges::any_of(m_users, isUsernameEqual);
+}
+
+bool impl::DBUser::isLoginExists(const std::string& login) const
+{
+	auto isLoginEqual = [&login](const User& user) {
+		return user.getLogin() == login;
+	};
+	return std::ranges::any_of(m_users, isLoginEqual);
+}
+
+bool impl::DBUser::signIn(const std::string& login, const std::string& password) const
+{
+	if (!isLoginExists(login))
 		return false;
 
-	m_privatemessages.emplace_back(PrivateMessage(content, sender, reciever));
-	return true;
-}
-// false if sender is invalid
-bool DB::sendMessage(const std::string& sender, const std::string& content)
-{
-	if (!(findUser(sender)))
+	auto isLoginEqual = [&login](const User& user) {
+		return user.getLogin() == login;
+	};
+
+	const auto& user = std::ranges::find_if(m_users, isLoginEqual);
+
+	if (user == m_users.end())
 		return false;
 
-	m_messages.emplace_back(Message(content, sender));
+	return (*user).authenticate(password);
+}
+
+bool impl::DBUser::signUp(const std::string& login, const std::string& password, const std::string& username)
+{
+	if (isLoginExists(login) || isUsernameExists(login))
+		return false;
+
+	m_users.push_back({ login, password, username });
+
 	return true;
 }
-// search user by his username
-User DB::findUser(const std::string& username) const
-{
-	//std::find_if(m_users.begin(),m_users.end(),std::equal(username.begin(),username.end(),? )
-	//what if not found?
-	for (const auto& element : m_users)
-	{
-		if (username == element.getUsername())
-			return element;
-	}
-	return User();
-}
-//search user by his login
-User DB::findAccount(const std::string& login) const
-{
-	for (const auto& element : m_users)
-	{
-		if (login == element.getLogin())
-			return element;
-	}
-	return User();
-}
-// login as user from the database, return empty if user/password isn't valid
-User DB::signIn(const std::string& login, const std::string& password) const
-{
-	auto user = findAccount(login);
 
-	if (!user)
-		return User();
-
-	if (!(user.authenticate(password)))
-		return User();
-
-	return user;
-}
-// add new user to database, return false if user with a specified login already exists or username is taken
-bool DB::signUp(const std::string& login, const std::string& password, const std::string& username)
+void impl::DBMessage::getMessages() const
 {
-	auto _login = findAccount(login);
-	auto _username = findUser(username);
-	if (_login || _username)
-		return User();
-	m_users.emplace_back(User(login,password,username));
+	std::ranges::for_each(m_messages, std::mem_fn(&Message::displayMessage));
+}
+
+void impl::DBMessage::getMessages(const std::string& password) const
+{
+	const auto display = [&password, this](const PrivateMessage& msg) {
+		msg.displayMessage(password, *this); return; 
+	};
+
+	std::for_each(m_privatemessages.begin(),m_privatemessages.end(), display);
+}
+
+bool impl::DBMessage::saveMessage(const std::string& content, const std::string& sender, const std::string& reciever)
+{
+	if (!(isUsernameExists(sender) && isUsernameExists(reciever)))
+		return false;
+
+	m_privatemessages.push_back(PrivateMessage(content,sender,reciever));
+
 	return true;
 }
-//display public messages
-void DB::getMessages() const
+
+bool impl::DBMessage::saveMessage(const std::string& content, const std::string& sender)
 {
-	for (const auto& element : m_messages)
-	{
-		element.displayMessage();
-		std::cout << '\n';
-	}
-}
-// display private messages
-void DB::getMessages(const std::string& password) const
-{
-	for (const auto& element : m_privatemessages)
-	{
-		element.displayMessage(*this,password);
-		std::cout << '\n';
-	}
+	if (!isUsernameExists(sender))
+		return false;
+
+	m_messages.push_back(Message(content, sender));
+
+	return true;
 }

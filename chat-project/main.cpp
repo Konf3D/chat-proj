@@ -5,5 +5,5 @@
 int main()
 {
 	GUI gui;
-	gui.visit();
+	gui.start();
 }

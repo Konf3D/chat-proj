@@ -12,9 +12,9 @@ GUI::GUI()
 }
 
 
-void GUI::visit()
+void GUI::start()
 {
-	std::cout << "1. SignIn\n2. SignUp\n3. Close";
+	std::cout << "1. SignIn\n2. SignUp\n3. Close\n";
 	char choice;
 	std::cin >> choice;
 	switch (choice)
@@ -30,7 +30,7 @@ void GUI::visit()
 	default:
 		break;
 	}
-	visit();
+	start();
 }
 
 void GUI::trySignIn()
@@ -44,20 +44,16 @@ void GUI::trySignIn()
 	std::string password;
 	std::getline(std::cin, password);
 	//std::cin >> login >> password;
+	if (signIn(login, password))
 	{
-		auto ptr = signIn(login,password);
-
-		if (ptr)
-		{
-			m_currentUser = ptr;
-			std::cout << "Login successful!\n";
-			m_password = password;
-			logged();
-		}
-		else
-		{
-			std::cout << "Login/password is incorrect! Try again.\n";
-		}
+		m_currentUser = login;
+		m_password = password;
+		std::cout << "Login successful!\n";
+		logged();
+	}
+	else
+	{
+		std::cout << "Login/password is incorrect! Try again.\n";
 	}
 	return;
 }
@@ -76,13 +72,12 @@ void GUI::trySignUp()
 	std::cout << "username: ";
 	std::getline(std::cin, username);
 	{
-		auto ptr = findAccount(login);
-		if (ptr)
+		if (DB::isLoginExists(login))
 		{
 			std::cout << "User already exists! Try again.\n";
 			return;
 		}
-		if (findUser(username))
+		if (DB::isUsernameExists(username))
 		{
 			std::cout << "This name is already taken! Try again.\n";
 			return;
@@ -93,7 +88,8 @@ void GUI::trySignUp()
 			std::cout << "Signup failed!\n";
 			return;
 		}
-		m_currentUser = findUser(username);
+		std::cout << "Signup successfull!\n";
+		m_currentUser = username;
 		logged();
 	}
 	return;
@@ -112,11 +108,14 @@ void GUI::logged()
 		std::cout << "Enter your message:";
 		std::getline(std::cin, message);
 		std::getline(std::cin, message);// because first time call gets empty string autimatically
-		if (sendMessage(m_currentUser.getUsername(), message) == false)
+		if (!DB::saveMessage(message,m_currentUser))
 		{
 			std::cout << "Message was not sent for unknown reason! Try again!\n";
 		}
-		std::cout << "Message sent successfully!\n";
+		else
+		{
+			std::cout << "Message was sent successfully!\n";
+		}
 		break;
 	}
 	case '2':
@@ -127,30 +126,29 @@ void GUI::logged()
 		std::cout << "Enter the reciever's username:";
 		std::string reciever;
 		std::getline(std::cin, reciever);
-		auto recieverUser = findUser(reciever);
-		if (!recieverUser)
+		if (!DB::saveMessage(message,m_currentUser,std::move(reciever)))
 		{
 			std::cout << "User(reciever) not found! Try again.\n";
 			break;
 		}
-		if (!sendMessage(m_currentUser.getUsername(), message, reciever))
+		else
 		{
-			std::cout << "Message was not sent for unknown reason! Try again!\n";
-			break;
+			std::cout << "Message was sent successfully!\n";
 		}
-		std::cout << "Message sent successfully!\n";
+
 		break;
 	}
 	case '3':
-		getMessages();
+		DB::getMessages();
 		break;
 	case '4':
-		getMessages(m_password);
+		DB::getMessages(m_password);
 		break;
 	case '5':
 		return;
 	default:
 		break;
 	}
+
 	logged();
 }

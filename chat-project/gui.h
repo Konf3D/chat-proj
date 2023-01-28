@@ -14,12 +14,12 @@ public:
 	GUI();
 	~GUI() = default;
 public:
-	void visit();
+	void start();
 private:
 	void trySignIn();
 	void trySignUp();
 	void logged();
 
-	User m_currentUser;
-	std::string m_password; // user class does not have password getter for security
+	std::string m_currentUser;
+	std::string m_password;
 };

@@ -11,10 +11,10 @@ Message::Message(const std::string& content, const std::string& sender)
 
 void Message::displayMessage() const
 {
-	std::cout << m_sender << " sent: \"" << m_content << "\"";
+	std::cout << m_sender << " sent: \"" << m_content << "\"\n";
 }
 
-std::string Message::getSender() const
+const std::string& Message::getSender() const
 {
 	return m_sender;
 }
@@ -24,11 +24,11 @@ PrivateMessage::PrivateMessage(const std::string& content, const std::string& se
 {
 }
 
-void PrivateMessage::displayMessage(const DB& db,const std::string& password) const
+void PrivateMessage::displayMessage(const std::string& password, const impl::DBUser& db) const
 {
-	if (db.findUser(getSender()).authenticate(password) || db.findUser(m_reciever).authenticate(password))
+	if (db.signIn(m_reciever, password) || db.signIn(Message::getSender(), password))
 	{
 		Message::displayMessage();
-		std::cout << " to " << m_reciever;
+		std::cout << "to " << m_reciever << '\n';
 	}
 }

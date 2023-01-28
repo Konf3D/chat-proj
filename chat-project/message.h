@@ -12,7 +12,7 @@ public:
 	~Message() = default;
 public:
 	void displayMessage() const;
-	std::string getSender() const;
+	const std::string& getSender() const;
 private:
 	std::string m_content;
 	std::string m_sender;
@@ -22,10 +22,10 @@ class PrivateMessage : private Message
 {
 public:
 	PrivateMessage() = delete;
-	PrivateMessage(const std::string& content, const std::string& sender,const std::string& reciever);
+	PrivateMessage(const std::string& content, const std::string& sender, const std::string& reciever);
 	~PrivateMessage() = default;
 public:
-	void displayMessage( const DB& db,const std::string& password) const;
+	void displayMessage(const std::string& password,const impl::DBUser& db) const;
 private:
 	std::string m_reciever;
 };

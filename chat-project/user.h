@@ -6,20 +6,19 @@
 class User
 {
 public:
-	User();
+	User() = delete;
 	User(const std::string& login, const std::string& password, const std::string& username);
 	User(const User& rhs);
-	User(User&& rhs);
+	User(User&& rhs) noexcept;
 	~User() = default;
 public:
 	bool authenticate(const std::string& password) const;
 	std::string getLogin() const;
 	std::string getUsername() const;
-	operator bool() const;
 	User& operator =(const User& rhs);
-	User& operator =(User&& rhs);
+	User& operator =(User&& rhs) noexcept;
 private:
 	std::string m_login;
-	std::string m_password;
+	std::size_t m_password;
 	std::string m_username;
 };
