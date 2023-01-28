@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <ranges>
 #include <functional>
+#include <stdexcept>
 #include "db.h"
 #include "user.h"
 #include "message.h"
@@ -71,7 +72,7 @@ bool impl::DBMessage::saveMessage(const std::string& content, const std::string&
 	if (!(isUsernameExists(sender) && isUsernameExists(reciever)))
 		return false;
 
-	m_privatemessages.push_back(PrivateMessage(content,sender,reciever));
+	m_privatemessages.emplace_back(content,sender,reciever);
 
 	return true;
 }
@@ -81,7 +82,21 @@ bool impl::DBMessage::saveMessage(const std::string& content, const std::string&
 	if (!isUsernameExists(sender))
 		return false;
 
-	m_messages.push_back(Message(content, sender));
+	m_messages.emplace_back(content, sender);
 
 	return true;
+}
+
+std::string impl::DBUser::getUsername(const std::string& login) const
+{
+	auto isLoginEqual = [&login](const User& user) {
+		return user.getLogin() == login;
+	};
+
+	const auto& user = std::ranges::find_if(m_users, isLoginEqual);
+
+	if (user == m_users.end())
+		throw std::logic_error("User not found");
+
+	return (*user).getUsername();
 }

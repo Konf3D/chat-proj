@@ -46,8 +46,8 @@ void GUI::trySignIn()
 	//std::cin >> login >> password;
 	if (signIn(login, password))
 	{
-		m_currentUser = login;
-		m_password = password;
+		m_currentUser = std::move(login);
+		m_password = std::move(password);
 		std::cout << "Login successful!\n";
 		logged();
 	}
@@ -89,7 +89,8 @@ void GUI::trySignUp()
 			return;
 		}
 		std::cout << "Signup successfull!\n";
-		m_currentUser = username;
+		m_currentUser = std::move(login);
+		m_password = std::move(password);
 		logged();
 	}
 	return;
@@ -99,7 +100,7 @@ void GUI::logged()
 {
 	static char choice;
 	static std::string message;
-	std::cout << "What to do:\n1.Write a message to everyone\n2.Write a message to a user\n3.Display public messages\n4.Display private messages\n5.Logout\n";
+	std::cout << "\nWhat to do:\n1.Write a message to everyone\n2.Write a message to a user\n3.Display public messages\n4.Display private messages\n5.Logout\n";
 	std::cin >> choice;
 	switch (choice)
 	{
@@ -108,7 +109,7 @@ void GUI::logged()
 		std::cout << "Enter your message:";
 		std::getline(std::cin, message);
 		std::getline(std::cin, message);// because first time call gets empty string autimatically
-		if (!DB::saveMessage(message,m_currentUser))
+		if (!DB::saveMessage(message, DBUser::getUsername(m_currentUser)))
 		{
 			std::cout << "Message was not sent for unknown reason! Try again!\n";
 		}
@@ -126,7 +127,7 @@ void GUI::logged()
 		std::cout << "Enter the reciever's username:";
 		std::string reciever;
 		std::getline(std::cin, reciever);
-		if (!DB::saveMessage(message,m_currentUser,std::move(reciever)))
+		if (!DB::saveMessage(message,DBUser::getUsername(m_currentUser), std::move(reciever)))
 		{
 			std::cout << "User(reciever) not found! Try again.\n";
 			break;

@@ -21,6 +21,7 @@ namespace impl
 		bool isLoginExists(const std::string& login) const;
 		bool signIn(const std::string& login, const std::string& password) const;
 		bool signUp(const std::string& login, const std::string& password, const std::string& username);
+		std::string getUsername(const std::string& login) const;
 	private:
 		std::vector <User> m_users;
 	};

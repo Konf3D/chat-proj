@@ -11,7 +11,7 @@ Message::Message(const std::string& content, const std::string& sender)
 
 void Message::displayMessage() const
 {
-	std::cout << m_sender << " sent: \"" << m_content << "\"\n";
+	std::cout << "\n" << m_sender << " sent: \"" << m_content << "\"\n";
 }
 
 const std::string& Message::getSender() const
@@ -29,6 +29,6 @@ void PrivateMessage::displayMessage(const std::string& password, const impl::DBU
 	if (db.signIn(m_reciever, password) || db.signIn(Message::getSender(), password))
 	{
 		Message::displayMessage();
-		std::cout << "to " << m_reciever << '\n';
+		std::cout << "to " << m_reciever << "\n\n";
 	}
 }
