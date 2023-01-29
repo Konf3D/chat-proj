@@ -61,16 +61,33 @@ void GUI::trySignIn()
 void GUI::trySignUp()
 {
 	std::cout << "Please, enter your credentials (login,password,username)\n";
-	std::string login;
-	std::cout << "login: ";
-	std::getline(std::cin, login);
-	std::getline(std::cin, login);// because first time call gets empty string autimatically
-	std::string password;
-	std::cout << "password: ";
-	std::getline(std::cin, password);
-	std::string username;
-	std::cout << "username: ";
-	std::getline(std::cin, username);
+	std::string login = "";
+	do
+	{
+		std::cout << "login: ";
+		std::cin >> login;
+		if (login.size() > 4)
+			break;
+		std::cout << "\nLogin is too short. Try again!\n";
+	} while (true);
+	std::string password = "";
+	do
+	{
+		std::cout << "password: ";
+		std::cin >> password;// because first time call gets empty string autimatically
+		if (password.size() > 4)
+			break;
+		std::cout << "\nPassword is too short. Try again!\n";
+	} while (true);
+	std::string username = "";
+	do
+	{
+		std::cout << "username: ";
+		std::cin >> username;
+		if (username.size() > 4)
+			break;
+		std::cout << "Username is too short. Try again!\n";
+	} while (true);
 	{
 		if (DB::isLoginExists(login))
 		{
