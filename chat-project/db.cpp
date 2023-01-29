@@ -15,7 +15,7 @@ bool impl::DBUser::isUsernameExists(const std::string& username) const
 	auto isUsernameEqual = [&username](const User& user) {
 		return user.getUsername() == username; 
 	};
-	return std::ranges::any_of(m_users, isUsernameEqual);
+	return std::any_of(m_users.begin(),m_users.end(), isUsernameEqual);
 }
 
 bool impl::DBUser::isLoginExists(const std::string& login) const
@@ -23,7 +23,7 @@ bool impl::DBUser::isLoginExists(const std::string& login) const
 	auto isLoginEqual = [&login](const User& user) {
 		return user.getLogin() == login;
 	};
-	return std::ranges::any_of(m_users, isLoginEqual);
+	return std::any_of(m_users.begin(),m_users.end(), isLoginEqual);
 }
 
 bool impl::DBUser::signIn(const std::string& login, const std::string& password) const
@@ -35,7 +35,7 @@ bool impl::DBUser::signIn(const std::string& login, const std::string& password)
 		return user.getLogin() == login;
 	};
 
-	const auto& user = std::ranges::find_if(m_users, isLoginEqual);
+	const auto& user = std::find_if(m_users.begin(),m_users.end(), isLoginEqual);
 
 	if (user == m_users.end())
 		return false;
@@ -55,7 +55,7 @@ bool impl::DBUser::signUp(const std::string& login, const std::string& password,
 
 void impl::DBMessage::getMessages() const
 {
-	std::ranges::for_each(m_messages, std::mem_fn(&Message::displayMessage));
+	std::for_each(m_messages.begin(),m_messages.end(), std::mem_fn(&Message::displayMessage));
 }
 
 void impl::DBMessage::getMessages(const std::string& password) const
@@ -64,7 +64,7 @@ void impl::DBMessage::getMessages(const std::string& password) const
 		msg.displayMessage(password, *this); return; 
 	};
 
-	std::ranges::for_each(m_privatemessages, display);
+	std::for_each(m_privatemessages.begin(),m_privatemessages.end(), display);
 }
 
 bool impl::DBMessage::saveMessage(const std::string& content, const std::string& sender, const std::string& reciever)
@@ -93,7 +93,7 @@ std::string impl::DBUser::getUsername(const std::string& login) const
 		return user.getLogin() == login;
 	};
 
-	const auto& user = std::ranges::find_if(m_users, isLoginEqual);
+	const auto& user = std::find_if(m_users.begin(),m_users.end(), isLoginEqual);
 
 	if (user == m_users.end())
 		throw std::logic_error("User not found. Invalid argument parsed in the impl::DBUser::getUsername!");
