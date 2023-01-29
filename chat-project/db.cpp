@@ -64,7 +64,7 @@ void impl::DBMessage::getMessages(const std::string& password) const
 		msg.displayMessage(password, *this); return; 
 	};
 
-	std::for_each(m_privatemessages.begin(),m_privatemessages.end(), display);
+	std::ranges::for_each(m_privatemessages, display);
 }
 
 bool impl::DBMessage::saveMessage(const std::string& content, const std::string& sender, const std::string& reciever)
@@ -96,7 +96,7 @@ std::string impl::DBUser::getUsername(const std::string& login) const
 	const auto& user = std::ranges::find_if(m_users, isLoginEqual);
 
 	if (user == m_users.end())
-		throw std::logic_error("User not found");
+		throw std::logic_error("User not found. Invalid argument parsed in the impl::DBUser::getUsername!");
 
 	return (*user).getUsername();
 }

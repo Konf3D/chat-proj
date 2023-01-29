@@ -6,13 +6,13 @@
 #include "user.h"
 #include "message.h"
 
-GUI::GUI()
+chatGUI::chatGUI()
 	:m_currentUser(), m_password()
 {
 }
 
 
-void GUI::start()
+void chatGUI::start()
 {
 	std::cout << "1. SignIn\n2. SignUp\n3. Close\n";
 	char choice;
@@ -33,7 +33,7 @@ void GUI::start()
 	start();
 }
 
-void GUI::trySignIn()
+void chatGUI::trySignIn()
 {
 	std::cout << "Please, enter your credentials (login,password)\n";
 	std::cout << "login: ";
@@ -58,7 +58,7 @@ void GUI::trySignIn()
 	return;
 }
 
-void GUI::trySignUp()
+void chatGUI::trySignUp()
 {
 	std::cout << "Please, enter your credentials (login,password,username)\n";
 	std::string login = "";
@@ -113,7 +113,7 @@ void GUI::trySignUp()
 	return;
 }
 
-void GUI::logged()
+void chatGUI::logged()
 {
 	static char choice;
 	static std::string message;

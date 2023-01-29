@@ -8,11 +8,11 @@
 #include "user.h" // User and Account classes
 #include "db.h"
 
-class GUI : private DB
+class chatGUI : private DB
 {
 public:
-	GUI();
-	~GUI() = default;
+	chatGUI();
+	~chatGUI() = default;
 public:
 	void start();
 private:
