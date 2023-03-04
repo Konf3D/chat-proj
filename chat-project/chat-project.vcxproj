@@ -148,13 +148,11 @@
     <ClCompile Include="db.cpp" />
     <ClCompile Include="gui.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="message.cpp" />
     <ClCompile Include="user.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="db.h" />
     <ClInclude Include="gui.h" />
-    <ClInclude Include="message.h" />
     <ClInclude Include="user.h" />
   </ItemGroup>
   <ItemGroup>

@@ -4,7 +4,6 @@
 #include <iostream>
 #include "gui.h"
 #include "user.h"
-#include "message.h"
 
 chatGUI::chatGUI()
 	:m_currentUser(), m_password()
@@ -160,7 +159,7 @@ void chatGUI::logged()
 		m_db.getMessages();
 		break;
 	case '4':
-		m_db.getMessages(m_password);
+		m_db.getMessages(m_db.getUsername(m_currentUser));
 		break;
 	case '5':
 		return;

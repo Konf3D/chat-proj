@@ -49,3 +49,13 @@ User& User::operator=(User&& rhs) noexcept
 	m_username = std::move(rhs.m_username);
 	return *this;
 }
+
+Message::Message(const std::string& content, const std::string& sender)
+	:m_content(content), m_sender(sender)
+{
+}
+
+PrivateMessage::PrivateMessage(const std::string& content, const std::string& sender, const std::string& reciever)
+	:Message(content, sender), m_reciever(reciever)
+{
+}

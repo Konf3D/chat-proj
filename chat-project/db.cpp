@@ -8,9 +8,9 @@
 #include <filesystem>
 #include "db.h"
 #include "user.h"
-#include "message.h"
 
-impl::DBUser::DBUser()
+// load database upon initialization
+DB::DB()
 {
 	std::fstream m_usersDBFile(usersDBFileName, std::ios::out | std::ios::in);
 	std::string login;
@@ -26,16 +26,7 @@ impl::DBUser::DBUser()
 			break;
 		std::getline(m_usersDBFile, username);
 		m_users.push_back({ login, password, username });
-	}
-}
-
-impl::DBUser::~DBUser()
-{
-
-}
-
-impl::DBMessage::DBMessage()
-{
+	}	
 	std::fstream m_messageDBFile;
 	m_messageDBFile.open(publicMessagesDBFileName, std::ios::out | std::ios::in);
 	std::string message;
@@ -63,11 +54,8 @@ impl::DBMessage::DBMessage()
 		m_privatemessages.push_back({ message,sender,reciever });
 	}
 }
-impl::DBMessage::~DBMessage()
-{
 
-}
-bool impl::DBUser::isUsernameExists(const std::string& username) const
+bool DB::isUsernameExists(const std::string& username) const
 {
 	auto isUsernameEqual = [&username](const User& user) {
 		return user.getUsername() == username; 
@@ -75,7 +63,7 @@ bool impl::DBUser::isUsernameExists(const std::string& username) const
 	return std::any_of(m_users.begin(),m_users.end(), isUsernameEqual);
 }
 
-bool impl::DBUser::isLoginExists(const std::string& login) const
+bool DB::isLoginExists(const std::string& login) const
 {
 	auto isLoginEqual = [&login](const User& user) {
 		return user.getLogin() == login;
@@ -83,7 +71,7 @@ bool impl::DBUser::isLoginExists(const std::string& login) const
 	return std::any_of(m_users.begin(),m_users.end(), isLoginEqual);
 }
 
-bool impl::DBUser::signIn(const std::string& login, const std::string& password) const
+bool DB::signIn(const std::string& login, const std::string& password) const
 {
 	if (!isLoginExists(login))
 		return false;
@@ -100,7 +88,7 @@ bool impl::DBUser::signIn(const std::string& login, const std::string& password)
 	return (*user).authenticate(password);
 }
 
-bool impl::DBUser::signUp(const std::string& login, const std::string& password, const std::string& username)
+bool DB::signUp(const std::string& login, const std::string& password, const std::string& username)
 {
 	if (isLoginExists(login) || isUsernameExists(login))
 		return false;
@@ -113,21 +101,25 @@ bool impl::DBUser::signUp(const std::string& login, const std::string& password,
 	return true;
 }
 
-void impl::DBMessage::getMessages() const
+void DB::getMessages() const
 {
-	std::for_each(m_messages.begin(),m_messages.end(), std::mem_fn(&Message::displayMessage));
+	for (const Message element : m_messages)
+	{
+		std::cout << "User \"" << element.m_sender << "\" has sent message: \"" << element.m_content << "\"\n";
+	}
 }
 
-void impl::DBMessage::getMessages(const std::string& password) const
+void DB::getMessages(const std::string& username) const
 {
-	const auto display = [&password, this](const PrivateMessage& msg) {
-		msg.displayMessage(password, *this); return; 
-	};
-
-	std::for_each(m_privatemessages.begin(),m_privatemessages.end(), display);
+	
+	for (const PrivateMessage element : m_privatemessages)
+	{
+		if(element.m_reciever == username || element.m_sender == username)
+			std::cout << "User \"" << element.m_sender << "\" has sent message: \"" << element.m_content << " for user \"" << element.m_reciever << "\"\n";
+	}
 }
 
-bool impl::DBMessage::saveMessage(const std::string& content, const std::string& sender, const std::string& reciever)
+bool DB::saveMessage(const std::string& content, const std::string& sender, const std::string& reciever)
 {
 
 	if (!(isUsernameExists(sender) && isUsernameExists(reciever)))
@@ -140,7 +132,7 @@ bool impl::DBMessage::saveMessage(const std::string& content, const std::string&
 	return true;
 }
 
-bool impl::DBMessage::saveMessage(const std::string& content, const std::string& sender)
+bool DB::saveMessage(const std::string& content, const std::string& sender)
 {
 	if (!isUsernameExists(sender))
 		return false;
@@ -152,7 +144,7 @@ bool impl::DBMessage::saveMessage(const std::string& content, const std::string&
 	return true;
 }
 
-std::string impl::DBUser::getUsername(const std::string& login) const
+std::string DB::getUsername(const std::string& login) const
 {
 	auto isLoginEqual = [&login](const User& user) {
 		return user.getLogin() == login;

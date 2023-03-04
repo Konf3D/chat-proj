@@ -22,3 +22,23 @@ private:
 	std::size_t m_password;
 	std::string m_username;
 };
+struct Message
+{
+public:
+	Message() = delete;
+	Message(const std::string& content, const std::string& sender);
+	~Message() = default;
+
+	std::string m_content;
+	std::string m_sender;
+};
+
+struct PrivateMessage : public Message
+{
+public:
+	PrivateMessage() = delete;
+	PrivateMessage(const std::string& content, const std::string& sender, const std::string& reciever);
+	~PrivateMessage() = default;
+
+	std::string m_reciever;
+};

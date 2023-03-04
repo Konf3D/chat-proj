@@ -4,8 +4,7 @@
 #pragma once
 #include <vector> //for users and messages database
 #include <memory> // for database element transfering
-#include "message.h" // Public message (Message) and PrivateMessage classes
-#include "user.h" // User and Account classes
+#include "user.h" // for user and message classes
 #include "db.h"
 
 class chatGUI
