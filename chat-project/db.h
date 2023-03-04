@@ -8,9 +8,9 @@
 class Message;
 class PrivateMessage;
 class User;
-constexpr auto usersDB = "user.db";
-constexpr auto publicMessagesDB = "public.db";
-constexpr auto privateMessagesDB = "private.db";
+constexpr auto usersDBFileName = "user.db";
+constexpr auto publicMessagesDBFileName = "public.db";
+constexpr auto privateMessagesDBFileName = "private.db";
 namespace impl
 {
 	class DBUser
@@ -26,7 +26,7 @@ namespace impl
 		std::string getUsername(const std::string& login) const;
 	private:
 		std::vector <User> m_users;
-		std::fstream m_usersDB;
+		std::fstream m_usersDBFile;
 	};
 	class DBMessage : public DBUser
 	{
@@ -43,8 +43,8 @@ namespace impl
 	private:
 		std::vector <Message>			m_messages;
 		std::vector <PrivateMessage>	m_privatemessages;
-		std::fstream m_publicDB;
-		std::fstream m_privateDB;
+		std::fstream m_publicDBFile;
+		std::fstream m_privateDBFile;
 	};
 }
 

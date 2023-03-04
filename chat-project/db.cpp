@@ -11,23 +11,23 @@
 
 impl::DBUser::DBUser()
 {
-	m_usersDB.open(usersDB, std::ios_base::out);
+	m_usersDBFile.open(usersDBFileName, std::ios_base::out);
 }
 
 impl::DBUser::~DBUser()
 {
-	m_usersDB.close();
+	m_usersDBFile.close();
 }
 
 impl::DBMessage::DBMessage()
 {
-	m_publicDB.open(publicMessagesDB, std::ios_base::out);
-	m_privateDB.open(privateMessagesDB, std::ios_base::out);
+	m_publicDBFile.open(publicMessagesDBFileName, std::ios_base::out);
+	m_privateDBFile.open(privateMessagesDBFileName, std::ios_base::out);
 }
 impl::DBMessage::~DBMessage()
 {
-	m_publicDB.close();
-	m_privateDB.close();
+	m_publicDBFile.close();
+	m_privateDBFile.close();
 }
 bool impl::DBUser::isUsernameExists(const std::string& username) const
 {
@@ -66,12 +66,11 @@ bool impl::DBUser::signUp(const std::string& login, const std::string& password,
 {
 	if (isLoginExists(login) || isUsernameExists(login))
 		return false;
-
+	m_usersDBFile << login << '\n' << password << '\n' << username << '\n';
 	m_users.push_back({ login, password, username });
 
 	return true;
 }
-
 
 void impl::DBMessage::getMessages() const
 {
@@ -89,7 +88,7 @@ void impl::DBMessage::getMessages(const std::string& password) const
 
 bool impl::DBMessage::saveMessage(const std::string& content, const std::string& sender, const std::string& reciever)
 {
-	m_privateDB << content << '\n' << sender << '\n' << reciever << '\n';
+	m_privateDBFile << content << '\n' << sender << '\n' << reciever << '\n';
 	if (!(isUsernameExists(sender) && isUsernameExists(reciever)))
 		return false;
 
@@ -100,7 +99,7 @@ bool impl::DBMessage::saveMessage(const std::string& content, const std::string&
 
 bool impl::DBMessage::saveMessage(const std::string& content, const std::string& sender)
 {
-	m_publicDB << content << '\n' << sender << '\n';
+	m_publicDBFile << content << '\n' << sender << '\n';
 	if (!isUsernameExists(sender))
 		return false;
 
