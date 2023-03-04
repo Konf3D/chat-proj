@@ -44,7 +44,7 @@ void chatGUI::trySignIn()
 	std::string password;
 	std::getline(std::cin, password);
 	//std::cin >> login >> password;
-	if (signIn(login, password))
+	if (m_db.signIn(login, password))
 	{
 		m_currentUser = std::move(login);
 		m_password = std::move(password);
@@ -89,18 +89,18 @@ void chatGUI::trySignUp()
 		std::cout << "Username is too short. Try again!\n";
 	} while (true);
 	{
-		if (DB::isLoginExists(login))
+		if (m_db.isLoginExists(login))
 		{
 			std::cout << "User already exists! Try again.\n";
 			return;
 		}
-		if (DB::isUsernameExists(username))
+		if (m_db.isUsernameExists(username))
 		{
 			std::cout << "This name is already taken! Try again.\n";
 			return;
 		}
 		m_password = password;
-		if (!DB::signUp(login, password, username))
+		if (!m_db.signUp(login, password, username))
 		{
 			std::cout << "Signup failed!\n";
 			return;
@@ -126,7 +126,7 @@ void chatGUI::logged()
 		std::cout << "Enter your message:";
 		std::getline(std::cin, message);
 		std::getline(std::cin, message);// because first time call gets empty string autimatically
-		if (!DB::saveMessage(message, DBUser::getUsername(m_currentUser)))
+		if (!m_db.saveMessage(message, m_db.getUsername(m_currentUser)))
 		{
 			std::cout << "Message was not sent for unknown reason! Try again!\n";
 		}
@@ -144,7 +144,7 @@ void chatGUI::logged()
 		std::cout << "Enter the reciever's username:";
 		std::string reciever;
 		std::getline(std::cin, reciever);
-		if (!DB::saveMessage(message,DBUser::getUsername(m_currentUser), std::move(reciever)))
+		if (!m_db.saveMessage(message,m_db.getUsername(m_currentUser), std::move(reciever)))
 		{
 			std::cout << "User(reciever) not found! Try again.\n";
 			break;
@@ -157,10 +157,10 @@ void chatGUI::logged()
 		break;
 	}
 	case '3':
-		DB::getMessages();
+		m_db.getMessages();
 		break;
 	case '4':
-		DB::getMessages(m_password);
+		m_db.getMessages(m_password);
 		break;
 	case '5':
 		return;

@@ -4,18 +4,20 @@
 #pragma once
 
 #include <vector> //for users and messages database
-
+#include <fstream>
 class Message;
 class PrivateMessage;
 class User;
-
+constexpr auto usersDB = "user.db";
+constexpr auto publicMessagesDB = "public.db";
+constexpr auto privateMessagesDB = "private.db";
 namespace impl
 {
 	class DBUser
 	{
 	public:
-		DBUser() = default;
-		virtual ~DBUser() = default;
+		DBUser();
+		virtual ~DBUser();
 	public:
 		bool isUsernameExists(const std::string& username) const;
 		bool isLoginExists(const std::string& login) const;
@@ -24,12 +26,13 @@ namespace impl
 		std::string getUsername(const std::string& login) const;
 	private:
 		std::vector <User> m_users;
+		std::fstream m_usersDB;
 	};
 	class DBMessage : public DBUser
 	{
 	public:
-		DBMessage() = default;
-		virtual ~DBMessage() = default;
+		DBMessage();
+		virtual ~DBMessage();
 	public:
 		void getMessages() const;
 		void getMessages(const std::string& password) const;
@@ -40,6 +43,8 @@ namespace impl
 	private:
 		std::vector <Message>			m_messages;
 		std::vector <PrivateMessage>	m_privatemessages;
+		std::fstream m_publicDB;
+		std::fstream m_privateDB;
 	};
 }
 

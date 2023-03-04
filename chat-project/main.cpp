@@ -4,5 +4,6 @@
 #include "gui.h"
 int main()
 {
+
 	chatGUI().start();
 }

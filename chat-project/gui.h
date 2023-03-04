@@ -8,7 +8,7 @@
 #include "user.h" // User and Account classes
 #include "db.h"
 
-class chatGUI : private DB
+class chatGUI
 {
 public:
 	chatGUI();
@@ -19,7 +19,7 @@ private:
 	void trySignIn();
 	void trySignUp();
 	void logged();
-
+	DB m_db;
 	std::string m_currentUser;
 	std::string m_password;
 };
