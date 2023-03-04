@@ -40,6 +40,7 @@
 /.vs/chat-proj/v17
 /.vs/chat-project/FileContentIndex
 /.vs
+/build/*
 /chat-project/.vs
 /chat-project/out/build/x64-Debug
 /chat-project/build/chatCLI
