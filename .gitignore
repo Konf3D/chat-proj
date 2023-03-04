@@ -42,3 +42,4 @@
 /.vs
 /chat-project/.vs
 /chat-project/out/build/x64-Debug
+/chat-project/build/chatCLI
