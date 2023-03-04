@@ -26,7 +26,6 @@ namespace impl
 		std::string getUsername(const std::string& login) const;
 	private:
 		std::vector <User> m_users;
-		std::fstream m_usersDBFile;
 	};
 	class DBMessage : public DBUser
 	{
@@ -43,8 +42,6 @@ namespace impl
 	private:
 		std::vector <Message>			m_messages;
 		std::vector <PrivateMessage>	m_privatemessages;
-		std::fstream m_publicDBFile;
-		std::fstream m_privateDBFile;
 	};
 }
 

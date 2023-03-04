@@ -5,29 +5,67 @@
 #include <algorithm>
 #include <functional>
 #include <stdexcept>
+#include <filesystem>
 #include "db.h"
 #include "user.h"
 #include "message.h"
 
 impl::DBUser::DBUser()
 {
-	m_usersDBFile.open(usersDBFileName, std::ios_base::out);
+	std::fstream m_usersDBFile(usersDBFileName, std::ios::out | std::ios::in);
+	std::string login;
+	std::string password;
+	std::string username;
+	while (!m_usersDBFile.eof())
+	{
+		std::getline(m_usersDBFile, login);
+		if (m_usersDBFile.eof())
+			break;
+		std::getline(m_usersDBFile, password);
+		if (m_usersDBFile.eof())
+			break;
+		std::getline(m_usersDBFile, username);
+		m_users.push_back({ login, password, username });
+	}
 }
 
 impl::DBUser::~DBUser()
 {
-	m_usersDBFile.close();
+
 }
 
 impl::DBMessage::DBMessage()
 {
-	m_publicDBFile.open(publicMessagesDBFileName, std::ios_base::out);
-	m_privateDBFile.open(privateMessagesDBFileName, std::ios_base::out);
+	std::fstream m_messageDBFile;
+	m_messageDBFile.open(publicMessagesDBFileName, std::ios::out | std::ios::in);
+	std::string message;
+	std::string sender;
+	std::string reciever;
+	while(!m_messageDBFile.eof())
+	{
+		std::getline(m_messageDBFile, message);
+		if (m_messageDBFile.eof())
+			break;
+		std::getline(m_messageDBFile, sender);
+		m_messages.push_back({message,sender});
+	}
+	m_messageDBFile.close();
+	m_messageDBFile.open(privateMessagesDBFileName, std::ios::out | std::ios::in);
+	while (!m_messageDBFile.eof())
+	{
+		std::getline(m_messageDBFile, message);
+		if (m_messageDBFile.eof())
+			break;
+		std::getline(m_messageDBFile, sender);
+		if (m_messageDBFile.eof())
+			break;
+		std::getline(m_messageDBFile,reciever);
+		m_privatemessages.push_back({ message,sender,reciever });
+	}
 }
 impl::DBMessage::~DBMessage()
 {
-	m_publicDBFile.close();
-	m_privateDBFile.close();
+
 }
 bool impl::DBUser::isUsernameExists(const std::string& username) const
 {
@@ -66,7 +104,10 @@ bool impl::DBUser::signUp(const std::string& login, const std::string& password,
 {
 	if (isLoginExists(login) || isUsernameExists(login))
 		return false;
+
+	std::fstream m_usersDBFile(usersDBFileName, std::ios::out | std::ios::in | std::ios::app);
 	m_usersDBFile << login << '\n' << password << '\n' << username << '\n';
+	m_usersDBFile.close();
 	m_users.push_back({ login, password, username });
 
 	return true;
@@ -88,10 +129,12 @@ void impl::DBMessage::getMessages(const std::string& password) const
 
 bool impl::DBMessage::saveMessage(const std::string& content, const std::string& sender, const std::string& reciever)
 {
-	m_privateDBFile << content << '\n' << sender << '\n' << reciever << '\n';
+
 	if (!(isUsernameExists(sender) && isUsernameExists(reciever)))
 		return false;
 
+	std::fstream m_messageDBFile(privateMessagesDBFileName, std::ios::out | std::ios::in | std::ios::app);
+	m_messageDBFile << content << '\n' << sender << '\n' << reciever << '\n';
 	m_privatemessages.emplace_back(content,sender,reciever);
 
 	return true;
@@ -99,10 +142,11 @@ bool impl::DBMessage::saveMessage(const std::string& content, const std::string&
 
 bool impl::DBMessage::saveMessage(const std::string& content, const std::string& sender)
 {
-	m_publicDBFile << content << '\n' << sender << '\n';
 	if (!isUsernameExists(sender))
 		return false;
 
+	std::fstream m_messageDBFile(publicMessagesDBFileName, std::ios::out | std::ios::in | std::ios::app);
+	m_messageDBFile << content << '\n' << sender << '\n';
 	m_messages.emplace_back(content, sender);
 
 	return true;
